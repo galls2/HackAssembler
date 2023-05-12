@@ -3,10 +3,7 @@
 #include <string>
 #include <vector>
 
-struct ParsedAsmLine {
-
-
-};
+#include "hack_assembler_common.h"
 
 class AsmFileParser {
     AsmFileParser() = default;
