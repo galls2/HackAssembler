@@ -1,0 +1,12 @@
+### C++ template
+*.o
+
+*.a
+*.lib
+
+# Executables
+*.exe
+
+cmake-build-*
+
+.idea/*
