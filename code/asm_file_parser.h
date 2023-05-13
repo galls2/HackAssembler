@@ -1,11 +1,12 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include "hack_assembler_common.h"
 
 class AsmFileParser {
+public:
     AsmFileParser() = default;
-    std::vector<ParsedAsmLine> parse(const std::string& asm_file_path);
+    ParsedAsmLines parse(const std::string& asm_file_path);
+
+private:
+    ParsedAsmLine parse_file_line(std::string&& unparsed_file_line);
 };
