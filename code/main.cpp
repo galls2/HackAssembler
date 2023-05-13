@@ -1,7 +1,8 @@
 #include <iostream>
 #include "hack_assembler.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     if (argc != 3)
     {
         std::cout << "Usage: " << argv[0] << " <input_asm_file_path> <out_hack_file_path>" << std::endl;

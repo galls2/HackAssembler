@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include "hack_assembler_common.h"
 
 class SymbolicCommandTranslator {
