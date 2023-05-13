@@ -8,5 +8,5 @@ public:
     ParsedAsmLines parse(const std::string& asm_file_path);
 
 private:
-    ParsedAsmLine parse_file_line(std::string&& unparsed_file_line);
+    static ParsedAsmLine parse_file_line(std::string unparsed_file_line);
 };

@@ -1,10 +1,10 @@
 #include "asm_file_parser.h"
 
 #include <fstream>
-#include <iostream>
 #include <sstream>
+#include <iostream>
 
-std::vector<ParsedAsmLine> AsmFileParser::parse(const std::string& asm_file_path) {
+ParsedAsmLines AsmFileParser::parse(const std::string& asm_file_path) {
     std::ifstream file_reader;
     file_reader.open(asm_file_path.data());
     if (!file_reader.is_open()) {
@@ -24,7 +24,7 @@ std::vector<ParsedAsmLine> AsmFileParser::parse(const std::string& asm_file_path
     return parsed_asm_lines;
 }
 
-ParsedAsmLine AsmFileParser::parse_file_line(std::string&& unparsed_file_line) {
+ParsedAsmLine AsmFileParser::parse_file_line(std::string unparsed_file_line) {
     ParsedAsmLine parsed_line;
 
     const size_t comment_start_pos = unparsed_file_line.find("//");
