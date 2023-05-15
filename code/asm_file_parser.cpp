@@ -1,7 +1,7 @@
 #include "asm_file_parser.h"
 
+#include <algorithm>
 #include <fstream>
-#include <sstream>
 #include <iostream>
 
 ParsedAsmLines AsmFileParser::parse(const std::string& asm_file_path) {
@@ -17,7 +17,7 @@ ParsedAsmLines AsmFileParser::parse(const std::string& asm_file_path) {
     std::string read_line;
     while (getline(file_reader, read_line)) {
         ParsedAsmLine parsed_line = parse_file_line(std::move(read_line));
-        parsed_asm_lines.emplace_back(std::move(parsed_line));
+        if (!parsed_line.empty()) parsed_asm_lines.emplace_back(std::move(parsed_line));
     }
 
     file_reader.close();
@@ -25,20 +25,14 @@ ParsedAsmLines AsmFileParser::parse(const std::string& asm_file_path) {
 }
 
 ParsedAsmLine AsmFileParser::parse_file_line(std::string unparsed_file_line) {
-    ParsedAsmLine parsed_line;
-
     const size_t comment_start_pos = unparsed_file_line.find("//");
     if (comment_start_pos != std::string::npos)
     {
         unparsed_file_line = unparsed_file_line.substr(0, comment_start_pos);
     }
 
-    std::istringstream iss(unparsed_file_line);
-    std::string temp_line_part;
-    while (getline( iss, temp_line_part, ' '))
-    {
-        if (!temp_line_part.empty()) parsed_line.add_part(std::move(temp_line_part));
-    }
+    const auto last_remove_index = std::remove(unparsed_file_line.begin(), unparsed_file_line.end(), ' ');
+    unparsed_file_line.erase(last_remove_index, unparsed_file_line.end());
 
-    return parsed_line;
+    return unparsed_file_line;
 }
