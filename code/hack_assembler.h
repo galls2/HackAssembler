@@ -1,6 +1,7 @@
 #pragma once
 
 #include "asm_file_parser.h"
+#include "symbolic_command_translator.h"
 
 class HackAssembler {
 public:
@@ -9,5 +10,6 @@ public:
 
 private:
     AsmFileParser _asm_file_parser;
+    SymbolicCommandTranslator _sym_cmd_translator;
 };
 
