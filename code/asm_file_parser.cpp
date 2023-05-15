@@ -1,8 +1,8 @@
 #include "asm_file_parser.h"
 
-#include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 ParsedAsmLines AsmFileParser::parse(const std::string& asm_file_path) {
     std::ifstream file_reader;

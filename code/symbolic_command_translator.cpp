@@ -1,9 +1,9 @@
 #include "symbolic_command_translator.h"
 
-#include <stdexcept>
-#include <iostream>
 #include <bitset>
 #include <cassert>
+#include <iostream>
+#include <stdexcept>
 
 std::string SymbolicCommandTranslator::translate_symbolic_command(ParsedAsmLine parsed_line) {
     assert(!parsed_line.empty());
@@ -45,7 +45,7 @@ std::string SymbolicCommandTranslator::handle_c_instruction(std::string unparsed
     const std::string dest_str = (equality_pos == std::string::npos) ? "" : unparsed_c_instruction.substr(0, equality_pos);
 
     const size_t semicolon_pos = unparsed_c_instruction.find(';');
-    const size_t comp_start_index = (equality_pos == std::string::npos) ? 0 : equality_pos + 1;
+    const size_t comp_start_index = (equality_pos == std::string::npos) ? 0 : (equality_pos + 1);
     const std::string comp_str = unparsed_c_instruction.substr(comp_start_index, semicolon_pos);
     const std::string jump_str = (semicolon_pos == std::string::npos) ? "" : unparsed_c_instruction.substr(semicolon_pos + 1);
 

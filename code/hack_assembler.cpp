@@ -20,7 +20,7 @@ void HackAssembler::assemble(const std::string &asm_path, const std::string& out
     }
 
     for (auto&& parsed_asm_line: parsed_asm_lines) {
-        std::string translated_cmd = SymbolicCommandTranslator::translate_symbolic_command(parsed_asm_line);
+        std::string translated_cmd = SymbolicCommandTranslator::translate_symbolic_command(std::move(parsed_asm_line));
         if (translated_cmd.empty()) return; // Error in translation, aborting
         out_stream << translated_cmd << std::endl;
     }
