@@ -11,7 +11,8 @@ public:
     SymbolTable& operator=(const SymbolTable& other) = delete;
     SymbolTable& operator=(SymbolTable&& other) = default;
 
-    bool add_symbol(const std::string& symbol, const uint16_t value);
+    bool add_symbol(std::string symbol, const uint16_t value);
+    [[nodiscard]] const std::map<std::string, uint16_t>& get_table() const { return _table; }
 
 private:
     void initialize_symbol_table();

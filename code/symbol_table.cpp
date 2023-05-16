@@ -8,10 +8,6 @@ SymbolTable::SymbolTable() {
     initialize_symbol_table();
 }
 
-bool SymbolTable::add_symbol(const std::string& symbol, const uint16_t value) {
-    return _table.emplace(symbol, value).second;
-}
-
 void SymbolTable::initialize_symbol_table() {
     for (uint8_t i = 0; i <= s_max_logical_register_num; ++i)
     {
@@ -25,4 +21,8 @@ void SymbolTable::initialize_symbol_table() {
     _table.emplace("ARG", s_arg_symbol_value);
     _table.emplace("THIS", s_this_symbol_value);
     _table.emplace("THAT", s_that_symbol_value);
+}
+
+bool SymbolTable::add_symbol(std::string symbol, const uint16_t value) {
+    return _table.emplace(std::move(symbol), value).second;
 }
