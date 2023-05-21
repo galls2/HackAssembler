@@ -4,13 +4,14 @@
 #include <cassert>
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 
-std::string SymbolicCommandTranslator::translate_symbolic_command(ParsedAsmLine parsed_line) {
+std::string SymbolicCommandTranslator::translate_symbolic_command(ParsedAsmLine parsed_line, SymbolTable& symbol_table) {
     assert(!parsed_line.empty());
 
     switch (parsed_line[0]) {
         case '@': { // A-instruction
-            return handle_a_instruction(parsed_line);
+            return handle_a_instruction(parsed_line, symbol_table);
         }
         default: { // C-instruction
             return handle_c_instruction(parsed_line);
@@ -18,21 +19,35 @@ std::string SymbolicCommandTranslator::translate_symbolic_command(ParsedAsmLine 
     }
 }
 
-std::string SymbolicCommandTranslator::handle_a_instruction(std::string unparsed_a_instruction) {
+std::string SymbolicCommandTranslator::handle_a_instruction(std::string unparsed_a_instruction, SymbolTable& symbol_table) {
     unparsed_a_instruction.erase(0, 1);
 
     uint16_t a_instruction_value;
 
-    try {
-        a_instruction_value = std::stoi(unparsed_a_instruction);
+    const auto symbol_table_translation = symbol_table.get(unparsed_a_instruction);
+    if (symbol_table_translation) { // label declaration or symbol that is already defined
+        a_instruction_value = *symbol_table_translation;
     }
-    catch (const std::invalid_argument& e) {
-        std::cerr << "Invalid A-instruction: " << unparsed_a_instruction << ". Failed to convert the string after @ to a number. Aborting." << std::endl;
-        return "";
+    else if (!std::all_of(unparsed_a_instruction.begin(), unparsed_a_instruction.end(), [](const auto& ch) { return std::isdigit(ch) != 0; }))
+    {   // valid variable declaration - a symbol
+        a_instruction_value = _next_var_address;
+        ++_next_var_address;
+        symbol_table.add_symbol(unparsed_a_instruction, a_instruction_value);
     }
-    catch (const std::out_of_range& e) {
-        std::cerr << "Invalid A-instruction: " << unparsed_a_instruction << ". Converted number is too large. Aborting." << std::endl;
-        return "";
+    else { // this is a pure address
+        try {
+            a_instruction_value = std::stoi(unparsed_a_instruction);
+        }
+        catch (const std::invalid_argument &e) {
+            std::cerr << "Invalid A-instruction: " << unparsed_a_instruction
+                      << ". Failed to convert the string after @ to a number. Aborting." << std::endl;
+            return "";
+        }
+        catch (const std::out_of_range &e) {
+            std::cerr << "Invalid A-instruction: " << unparsed_a_instruction
+                      << ". Converted number is too large. Aborting." << std::endl;
+            return "";
+        }
     }
 
     return std::bitset<16>(a_instruction_value).to_string();
