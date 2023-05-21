@@ -26,3 +26,11 @@ void SymbolTable::initialize_symbol_table() {
 bool SymbolTable::add_symbol(std::string symbol, const uint16_t value) {
     return _table.emplace(std::move(symbol), value).second;
 }
+
+std::optional<uint16_t> SymbolTable::get(const std::string& symbol) const {
+    if (_table.find(symbol) == _table.end()) {
+        return {};
+    }
+
+    return {_table.at(symbol)};
+}

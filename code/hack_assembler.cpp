@@ -21,10 +21,11 @@ void HackAssembler::assemble(const std::string &asm_path, const std::string& out
 
     SymbolTable symbol_table;
     extract_label_definitions(parsed_asm_lines, symbol_table);
-    for (const auto& x : symbol_table.get_table()) {  std::cout << x.first << "," << x.second << std::endl; }
+
+    SymbolicCommandTranslator translator;
 
     for (auto&& parsed_asm_line: parsed_asm_lines) {
-        std::string translated_cmd = SymbolicCommandTranslator::translate_symbolic_command(std::move(parsed_asm_line));
+        const std::string translated_cmd = translator.translate_symbolic_command(std::move(parsed_asm_line), symbol_table);
         if (translated_cmd.empty()) return; // Error in translation, aborting
         (*out_stream) << translated_cmd << std::endl;
     }
