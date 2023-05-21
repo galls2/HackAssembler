@@ -1,9 +1,8 @@
 #include "hack_assembler.h"
-#include "symbol_table.h"
 
 #include <fstream>
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 void HackAssembler::assemble(const std::string &asm_path, const std::string& out_path)
 {
@@ -12,6 +11,8 @@ void HackAssembler::assemble(const std::string &asm_path, const std::string& out
     {
         return;
     }
+
+    std::ofstream& o_stream = *out_stream;
 
     ParsedAsmLines parsed_asm_lines = _asm_file_parser.parse(asm_path);
     if (parsed_asm_lines.empty())
@@ -27,10 +28,10 @@ void HackAssembler::assemble(const std::string &asm_path, const std::string& out
     for (auto&& parsed_asm_line: parsed_asm_lines) {
         const std::string translated_cmd = translator.translate_symbolic_command(std::move(parsed_asm_line), symbol_table);
         if (translated_cmd.empty()) return; // Error in translation, aborting
-        (*out_stream) << translated_cmd << std::endl;
+        o_stream << translated_cmd << std::endl;
     }
 
-    out_stream->close();
+    o_stream.close();
 }
 
 std::optional<std::ofstream> HackAssembler::open_output_file(const std::string& out_path) {
